@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NetLab — Virtual Network Lab</title>
+
+  <!-- ── Google Fonts ── -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- ══════════════════════════════════════════════════════
+       STYLESHEETS
+  ══════════════════════════════════════════════════════ -->
+  <link rel="stylesheet" href="styles/base.css?v=6" />
+  <link rel="stylesheet" href="styles/layout.css?v=6" />
+  <link rel="stylesheet" href="styles/components.css?v=6" />
+
+  <!-- ── React (UMD) ── -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+</head>
+<body>
+
+<div id="root"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     SIMULATION ENGINES
+══════════════════════════════════════════════════════ -->
+<script src="engines/stopAndWait.js?v=6"></script>
+<script src="engines/goBackN.js?v=6"></script>
+<script src="engines/selectiveRepeat.js?v=6"></script>
+<script src="engines/arqError.js?v=6"></script>
+
+<!-- ══════════════════════════════════════════════════════
+     SHARED COMPONENTS
+══════════════════════════════════════════════════════ -->
+<script src="components/shared.js?v=6"></script>
+
+<!-- ══════════════════════════════════════════════════════
+     EXPERIMENTS
+══════════════════════════════════════════════════════ -->
+<script src="experiments/StopWaitExp.js?v=6"></script>
+<script src="experiments/GoBackNExp.js?v=6"></script>
+<script src="experiments/SelectiveRepeatExp.js?v=6"></script>
+<script src="experiments/ARQErrorExp.js?v=6"></script>
+<script src="experiments/StopWaitTimeoutExp.js?v=6"></script>
+<script src="experiments/SlidingWindowAnalysisExp.js?v=6"></script>
+
+<!-- ══════════════════════════════════════════════════════
+     MAIN APP
+══════════════════════════════════════════════════════ -->
+<script>
+const { useState } = React;
+
+function HomePage({ onSelect }) {
+  const experiments = [
+    { id: 'saw', icon: '🚀', name: 'Stop-and-Wait ARQ', desc: 'The simplest flow control. Send one frame, wait for the reply.' },
+    { id: 'gbn', icon: '🌊', name: 'Go-Back-N ARQ', desc: 'Sliding window protocol. High speed but dramatic error recovery.' },
+    { id: 'sr',  icon: '🎯', name: 'Selective Repeat ARQ', desc: 'Implementation of Selective Repeat ARQ Flow Control Protocol.' },
+    { id: 'err', icon: '🛡️', name: 'Error Detection ARQ', desc: 'Study how Parity and CRC trigger retransmissions upon bit errors.' },
+    { id: 'tmout', icon: '⏲️', name: 'Timeout Mechanism', desc: 'Analyze the role of timers in recovering from lost packets.' },
+    { id: 'swa', icon: '📊', name: 'Window Analysis', desc: 'Direct comparison between GBN and Selective Repeat mechanisms.' },
+  ];
+
+  return React.createElement('div', { className: 'home' },
+    React.createElement('div', { className: 'home-hero' },
+      React.createElement('h1', null, 'Master Networking with NetLab'),
+      React.createElement('p', null, 'An interactive playground for data-link and network protocols.')
+    ),
+    React.createElement('div', { className: 'exp-cards' },
+      experiments.map(e =>
+        React.createElement('div', { key: e.id, className: 'exp-card', onClick: () => onSelect(e.id) },
+          React.createElement('div', { className: 'ec-icon' }, e.icon),
+          React.createElement('h3', null, e.name),
+          React.createElement('p', null, e.desc)
+        )
+      )
+    )
+  );
+}
+
+function App() {
+  const [activeExp, setActiveExp] = useState(null);
+
+  const tabs = [
+    { id: 'saw', label: 'Stop-and-Wait' },
+    { id: 'gbn', label: 'Go-Back-N' },
+    { id: 'sr',  label: 'Selective Repeat' },
+    { id: 'err', label: 'Error Detection' },
+    { id: 'tmout', label: 'Timeout ARQ' },
+    { id: 'swa', label: 'Window Analysis' },
+  ];
+
+  const renderExperiment = () => {
+    try {
+      switch (activeExp) {
+        case 'saw': return window.StopWaitExp ? React.createElement(window.StopWaitExp) : 'Loading SAW...';
+        case 'gbn': return window.GoBackNExp ? React.createElement(window.GoBackNExp) : 'Loading GBN...';
+        case 'sr':  return window.SelectiveRepeatExp ? React.createElement(window.SelectiveRepeatExp) : 'Loading SR...';
+        case 'err': return window.ARQErrorExp ? React.createElement(window.ARQErrorExp) : 'Loading Error Exp...';
+        case 'tmout': return window.StopWaitTimeoutExp ? React.createElement(window.StopWaitTimeoutExp) : 'Loading Timeout Exp...';
+        case 'swa': return window.SlidingWindowAnalysisExp ? React.createElement(window.SlidingWindowAnalysisExp) : 'Loading SWA...';
+        default:    return React.createElement(HomePage, { onSelect: setActiveExp });
+      }
+    } catch (err) {
+      return React.createElement('div', { className: 'card' }, 'Error rendering: ' + err.message);
+    }
+  };
+
+  return React.createElement('div', { className: 'app' },
+    React.createElement('div', { className: 'header' },
+      React.createElement('div', { className: 'logo', onClick: () => setActiveExp(null) }, 'NetLab', React.createElement('span', null, 'v2.0')),
+      React.createElement('div', { className: 'tab-bar' },
+        tabs.map(t =>
+          React.createElement('div', { key: t.id, className: `tab ${activeExp === t.id ? 'active' : ''}`, onClick: () => setActiveExp(t.id) }, t.label)
+        )
+      )
+    ),
+    React.createElement('div', { className: 'workspace' },
+      activeExp && React.createElement('div', { className: 'sidebar' },
+        tabs.map(t =>
+          React.createElement('div', { key: t.id, className: `exp-item ${activeExp === t.id ? 'active' : ''}`, onClick: () => setActiveExp(t.id) },
+            React.createElement('div', { className: 'exp-dot' }), t.label
+          )
+        )
+      ),
+      React.createElement('div', { className: 'main' }, renderExperiment())
+    )
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(React.createElement(App));
+</script>
+
+</body>
+</html>

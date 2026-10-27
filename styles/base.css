@@ -1,0 +1,95 @@
+:root {
+  /* ── Background layers (Modern Dark Slate) ── */
+  --bg:      #020617;   /* Slate 950 - Deepest background */
+  --bg2:     #0f172a;   /* Slate 900 - Surface Color */
+  --bg3:     #1e293b;   /* Slate 800 - Component Color */
+  --bg4:     #334155;   /* Slate 700 - Hover/Active Color */
+
+  /* ── Borders (Subtle Glass Effect) ── */
+  --border:  rgba(255, 255, 255, 0.04);
+  --border2: rgba(255, 255, 255, 0.08);
+  --border3: rgba(255, 255, 255, 0.15);
+
+  /* ── Typography (Optimized for Readability) ── */
+  --text:    #f8fafc;   /* Slate 50 - Titles */
+  --text2:   #e2e8f0;   /* Slate 200 - Body */
+  --text3:   #94a3b8;   /* Slate 400 - Muted info */
+
+  /* ── Accent / Brand (Vibrant Electric Blue) ── */
+  --accent:  #38bdf8;   /* Sky 400 */
+  --accent2: #7dd3fc;   /* Sky 300 */
+  --grad:    linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+  --grad-hover: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 100%);
+  --grad-surface: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%);
+
+  /* ── Semantic Colors (Luminous Tones) ── */
+  --green:   #34d399;   /* Emerald 400 */
+  --red:     #fb7185;   /* Rose 400 */
+  --yellow:  #fbbf24;   /* Amber 400 */
+  --purple:  #a78bfa;   /* Violet 400 */
+  --cyan:    #22d3ee;   /* Cyan 400 */
+
+  /* ── Shadows & Radius (Softer & Deeper) ── */
+  --radius:  12px;
+  --radius-lg: 16px;
+  --shadow:  0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 20px rgba(56, 189, 248, 0.15);
+
+  /* ── Fonts ── */
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Inter', sans-serif;
+  --heading: 'Space Grotesk', sans-serif;
+}
+
+/* ── Global Reset & Refinements ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text2);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Typography Refinements ── */
+h1, h2, h3, h4 {
+  font-family: var(--heading);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+/* ── Custom Scrollbar (Sleek Dark) ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { 
+  background: var(--bg4); 
+  border-radius: 20px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+
+/* ── Utility: modern divider ── */
+.divider {
+  height: 1px;
+  background: var(--border2);
+  margin: 24px 0;
+}
+
+/* ── Selection color ── */
+::selection {
+  background: var(--accent);
+  color: #000;
+}
